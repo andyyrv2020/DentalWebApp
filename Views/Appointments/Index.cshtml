@@ -41,6 +41,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Description)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Duration)
+                    </th>
                     </th>
                     <th style="text-align: center; vertical-align: middle;">
                         Actions
@@ -50,21 +53,25 @@
 
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            <tr>
                 <td style="text-align: center; vertical-align: middle; font-size: 17px;"><strong>@rowNumber</strong></td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AppointmentDate)
-            </td>
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentDate)
+                </td>
+                <td>
                     @Html.DisplayFor(model => item.Dentist.FullName)
                 </td>
-            <td>
+                <td>
                     @Html.DisplayFor(model => item.Patient.FullName)
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
                 <td style="text-align: center; vertical-align: middle;">
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
                         <i class="bi bi-pencil-fill"></i>
@@ -76,8 +83,8 @@
                         <i class="bi bi-trash3"></i>
                     </a>
                 </td>
-        </tr>
-        rowNumber++;
-}
+            </tr>
+            rowNumber++;
+        }
     </tbody>
 </table>

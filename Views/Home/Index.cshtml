@@ -1,8 +1,64 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model dynamic
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    ViewData["Title"] = "Home";
+}
+<hr />
+<h1>Welcome to DentalWebApp</h1>
+
+<div class="row mb-4">
+    <hr />
+    <div class="col-md-4">
+        <a asp-controller="Patients" asp-action="Create" class="btn btn-success btn-block">
+            Add New Patient <i class="bi bi-person-plus"></i>
+        </a>
+    </div>
+    <div class="col-md-4 text-center">
+        <a asp-controller="Dentists" asp-action="Create" class="btn btn-success btn-block">
+            Add New Dentist <i class="bi bi-person-plus"></i>
+        </a>
+    </div>
+    <div class="col-md-4 text-end">
+        <a asp-controller="Appointments" asp-action="Create" class="btn btn-success btn-block">
+            Schedule New Appointment <i class="bi bi-calendar-plus"></i>
+        </a>
+    </div>
 </div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Dentists</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalDentists</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total Patients</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalPatients</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Total Appointments</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalAppointments</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Upcoming Appointments</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.UpcomingAppointments</h5>
+            </div>
+        </div>
+    </div>
+    <hr />
+
+</div>
+

@@ -60,10 +60,18 @@ namespace DentalWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AppointmentDate,DentistId,PatientId,Description")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("Id,AppointmentDate,Duration,DentistId,PatientId,Description")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
+                if (IsAppointmentOverlapping(appointment))
+                {
+                    ModelState.AddModelError("", "The appointment overlaps with another appointment for the same dentist.");
+                    ViewData["DentistId"] = new SelectList(_context.Dentists, "Id", "FullName", appointment.DentistId);
+                    ViewData["PatientId"] = new SelectList(_context.Patients, "Id", "FullName", appointment.PatientId);
+                    return View(appointment);
+                }
+
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,7 +106,7 @@ namespace DentalWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AppointmentDate,DentistId,PatientId,Description")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AppointmentDate,Duration,DentistId,PatientId,Description")] Appointment appointment)
         {
             if (id != appointment.Id)
             {
@@ -107,6 +115,14 @@ namespace DentalWebApp.Controllers
 
             if (ModelState.IsValid)
             {
+                if (IsAppointmentOverlapping(appointment))
+                {
+                    ModelState.AddModelError("", "The appointment overlaps with another appointment for the same dentist.");
+                    ViewData["DentistId"] = new SelectList(_context.Dentists, "Id", "FullName", appointment.DentistId);
+                    ViewData["PatientId"] = new SelectList(_context.Patients, "Id", "FullName", appointment.PatientId);
+                    return View(appointment);
+                }
+
                 try
                 {
                     _context.Update(appointment);
@@ -168,6 +184,15 @@ namespace DentalWebApp.Controllers
         private bool AppointmentExists(int id)
         {
             return _context.Appointments.Any(e => e.Id == id);
+        }
+
+        private bool IsAppointmentOverlapping(Appointment appointment)
+        {
+            return _context.Appointments.Any(a =>
+                a.DentistId == appointment.DentistId &&
+                a.Id != appointment.Id &&
+                ((a.AppointmentDate <= appointment.AppointmentDate && a.AppointmentDate.AddMinutes(a.Duration) > appointment.AppointmentDate) ||
+                 (appointment.AppointmentDate <= a.AppointmentDate && appointment.AppointmentDate.AddMinutes(appointment.Duration) > a.AppointmentDate)));
         }
     }
 }
